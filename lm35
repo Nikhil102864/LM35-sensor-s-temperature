@@ -1,0 +1,41 @@
+#include <elapsedMillis.h>
+
+// Define the analog pin where LM35 sensor is connected
+const int lm35Pin = A0;
+// Define the onboard LED pin
+const int ledPin = 13;
+
+// Variables to store temperature and LED blink intervals
+float temperature = 0.0;
+elapsedMillis ledBlinkInterval;
+
+void setup() {
+  // Initialize the LED pin as an output
+  pinMode(ledPin, OUTPUT);
+  // Serial communication for debugging (optional)
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Read the LM35 temperature sensor value
+  int sensorValue = analogRead(lm35Pin);
+  temperature = (sensorValue * 0.48876); // Convert analog value to temperature in Celsius
+
+  // Check temperature and control LED
+  if (temperature < 30.0) {
+    if (ledBlinkInterval > 250) {
+      digitalWrite(ledPin, !digitalRead(ledPin)); // Toggle the LED state
+      ledBlinkInterval = 0;
+    }
+  } else {
+    if (ledBlinkInterval > 500) {
+      digitalWrite(ledPin, !digitalRead(ledPin)); // Toggle the LED state
+      ledBlinkInterval = 0;
+    }
+  }
+
+  // Print temperature for debugging (optional)
+  Serial.print("Temperature: ");
+  Serial.print(temperature);
+  Serial.println("°C");
+}
